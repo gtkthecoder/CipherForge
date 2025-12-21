@@ -334,7 +334,6 @@ By using this software, you agree that:
 - **Documentation**: This README file
 
 ## 📊 **Statistics**
-- **Files Processed**: 1000+
 - **Success Rate**: 99.9%
 - **Encryption Speed**: 50-200 MB/s (depending on hardware)
 - **File Size Limit**: None (handles multi-gigabyte files)
