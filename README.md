@@ -305,7 +305,7 @@ We welcome contributions! Here's how:
 ```bash
 # Clone repository
 git clone https://github.com/gtk-gg/cipherforge.git
-cd cipherforge
+cd CipherForge
 
 # Create virtual environment
 python -m venv venv
@@ -332,7 +332,7 @@ By using this software, you agree that:
 ## 🌟 **Support**
 
 - **GitHub Issues**: [Report bugs or request features](https://github.com/gtk-gg/cipherforge/issues)
-- **Email**: [Add your contact if desired]
+- **Email**: gatikbahet041211@gmail.com
 - **Documentation**: This README file
 
 ## 📊 **Statistics**
