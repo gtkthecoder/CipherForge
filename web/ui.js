@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-
     const overlay = document.getElementById('overlay');
     const acceptBtn = document.getElementById('acceptBtn');
     const appDiv = document.getElementById('app');
@@ -20,10 +19,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const backToMenu = document.getElementById('backToMenu');
 
     let selectedFileObj = null;
-
-    // Initially disable buttons until file selected
-    encryptBtn.disabled = true;
-    decryptBtn.disabled = true;
 
     // Accept Warning
     acceptBtn.addEventListener('click', () => {
