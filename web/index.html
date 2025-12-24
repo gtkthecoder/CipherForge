@@ -9,24 +9,22 @@
 <body>
 
 <!-- WARNING OVERLAY -->
-<div id="overlay" class="overlay">
-  <div class="warning-box">
-    <h1>⚠️ IMPORTANT WARNING ⚠️</h1>
-    <p>
-      This tool is <strong>FOR EDUCATIONAL PURPOSES ONLY</strong>.<br>
-      Do NOT use for malicious or illegal activities.<br>
-      Encryption is irreversible without the password.<br>
-      Save passwords securely — they cannot be recovered.
-    </p>
-    <button id="acceptBtn">I Accept</button>
-  </div>
+<div id="overlay">
+  <h1>⚠️ WARNING ⚠️</h1>
+  <p>
+    Educational purposes only.<br>
+    Do NOT use for malicious activities.<br>
+    Encryption irreversible without password.<br>
+    Save your passwords securely.
+  </p>
+  <button id="acceptBtn">I Accept</button>
 </div>
 
 <!-- MAIN APP -->
-<div id="app" class="app hidden">
-  <div id="fileDrop" class="file-drop">Click or Drag & Drop a file here</div>
+<div id="app" class="hidden">
+  <div id="fileDrop">Click or Drag & Drop a file here</div>
   <input type="file" id="fileInput" hidden>
-  <div id="selectedFile">No file selected</div>
+  <p id="selectedFile">No file selected</p>
 
   <div class="buttons">
     <button id="encryptBtn" disabled>Encrypt</button>
@@ -41,7 +39,7 @@
 
   <div id="statusSection" class="hidden">
     <p id="statusText"></p>
-    <button id="backToMenu">Back to Main Menu</button>
+    <button id="backToMenu">Back to Menu</button>
   </div>
 
   <footer>
@@ -55,5 +53,6 @@
 <script src="crypto.js"></script>
 <script src="ui.js"></script>
 <script src="app.js"></script>
+<script src="error.js"></script>
 </body>
 </html>
