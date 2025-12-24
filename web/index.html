@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CipherForge 2036</title>
+<title>CipherForge Web</title>
 <link rel="stylesheet" href="styles.css">
-<link rel="icon" type="image/png" href="assets/favicon.ico">
 </head>
 <body>
 
+<!-- WARNING OVERLAY -->
 <div id="overlay" class="overlay">
   <div class="warning-box">
     <h1>⚠️ IMPORTANT WARNING ⚠️</h1>
@@ -22,40 +22,32 @@
   </div>
 </div>
 
+<!-- MAIN APP -->
 <div id="app" class="app hidden">
-  <header>
-    <h1>CipherForge 🔒</h1>
+  <div id="fileDrop" class="file-drop">Click or Drag & Drop a file here</div>
+  <input type="file" id="fileInput" hidden>
+  <div id="selectedFile">No file selected</div>
+
+  <div class="buttons">
+    <button id="encryptBtn" disabled>Encrypt</button>
+    <button id="decryptBtn" disabled>Decrypt</button>
+    <button id="methodsBtn">Methods</button>
+  </div>
+
+  <div id="passwordSection" class="hidden">
+    <input type="text" id="genPassword" readonly>
+    <button id="copyPassword">Copy</button>
+  </div>
+
+  <div id="statusSection" class="hidden">
+    <p id="statusText"></p>
+    <button id="backToMenu">Back to Main Menu</button>
+  </div>
+
+  <footer>
     <a href="https://github.com/gtkthecoder" target="_blank">
       <img src="assets/github.svg" alt="GitHub" class="github-logo">
     </a>
-  </header>
-
-  <main>
-    <div id="fileDrop" class="file-drop">
-      <p>Drag & drop your file here or click to select</p>
-      <input type="file" id="fileInput" hidden>
-      <span id="selectedFile">No file selected</span>
-    </div>
-
-    <div class="menu">
-      <button id="encryptBtn">Encrypt File</button>
-      <button id="decryptBtn">Decrypt File</button>
-      <button id="methodsBtn">Encryption Methods</button>
-    </div>
-
-    <div id="passwordSection" class="password-section hidden">
-      <h3>Generated Password (~100 chars)</h3>
-      <textarea id="genPassword" readonly></textarea>
-      <button id="copyPassword">Copy</button>
-    </div>
-
-    <div id="statusSection" class="status-section hidden">
-      <p id="statusText"></p>
-      <button id="backToMenu">Back to Menu</button>
-    </div>
-  </main>
-
-  <footer>
     <p>© 2025-26 CipherForge</p>
   </footer>
 </div>
