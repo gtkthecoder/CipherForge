@@ -1,6 +1,6 @@
 class CipherForgeCrypto {
     constructor() {
-        this.chunkSize = 65536; // 64KB chunks (for future use if needed)
+        this.chunkSize = 65536; // for future chunking
     }
 
     async encryptFile(file, password) {
@@ -9,17 +9,14 @@ class CipherForgeCrypto {
         const key = await this.deriveKey(password, salt);
 
         const buffer = await file.arrayBuffer();
-
         const cipherBuffer = await crypto.subtle.encrypt(
             { name: "AES-GCM", iv: iv },
             key,
             buffer
         );
 
-        // File format: CF! + salt + iv + ciphertext
-        const header = new Uint8Array([0x43,0x46,0x21]);
-        const blob = new Blob([header, salt, iv, new Uint8Array(cipherBuffer)], {type: "application/octet-stream"});
-        return blob;
+        const header = new Uint8Array([0x43,0x46,0x21]); // "CF!"
+        return new Blob([header, salt, iv, new Uint8Array(cipherBuffer)], {type:"application/octet-stream"});
     }
 
     async decryptFile(file, password) {
@@ -72,3 +69,6 @@ class CipherForgeCrypto {
         return pwd;
     }
 }
+
+// Initialize global engine
+window.cryptoEngine = new CipherForgeCrypto();
