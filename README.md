@@ -9,12 +9,9 @@
 
 ## ✨ **Features**
 
-- 🔒 **AES-256 Encryption** - Industry-standard security
-- 📁 **All File Types Supported** - PDF, Images, Videos, Documents, Executables
-- 🚀 **Fast Performance** - Chunk-based processing for large files
+- 🔒 **AES-256 Encryption** - Strongest Bit Encryption
+- 📁 **All File Types Supported** - PDF, Images, Videos, Documents, Executables, etc.
 - 🔑 **Secure Password Generation** - Built-in strong password generator
-- 📋 **Clipboard Integration** - Auto-copy generated passwords
-- ✅ **Integrity Verification** - SHA-256 checksums prevent corruption
 - 🎯 **Simple UI** - Clean, intuitive command-line interface
 - 📍 **Same Folder Storage** - Files stay organized in original locations
 
