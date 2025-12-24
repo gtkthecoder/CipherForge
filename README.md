@@ -47,19 +47,36 @@ When you first run CipherForge, you'll see:
 THIS TOOL IS FOR EDUCATIONAL PURPOSES ONLY!
 DO NOT USE FOR MALICIOUS ACTIVITIES OR ILLEGAL PURPOSES
 DEVELOPER IS NOT RESPONSIBLE FOR YOUR ACTIONS!
+  ⚠️  ENCRYPTION CAN BE IRREVERSIBLE WITHOUT PASSWORD!
+  ⚠️  SAVE YOUR PASSWORD SECURELY - CANNOT BE RECOVERED!           
+  ⚠️  DEVELOPER IS NOT RESPONSIBLE FOR LOST PASSWORDS OR FILE      
+  ⚠️  FOR SECURITY PURPOSE, ENCRYPTED FILE WILL BE SAVED AS COPY
 ```
 
 **You must type `ACCEPT` to continue.**
 
 ### **2. Main Menu**
 ```
-🏠 MAIN MENU
-═══════════════════════════════════════════════════
+╔══════════════════════════════════════════════════════════════════╗
+║                                                                  ║
+║   ██████╗██╗██████╗ ██╗  ██╗███████╗██████╗ ███████╗ ██████╗ ██████╗  ██████╗ ███████╗
+║  ██╔════╝██║██╔══██╗██║  ██║██╔════╝██╔══██╗██╔════╝██╔═══██╗██╔══██╗██╔════╝ ██╔════╝
+║  ██║     ██║██████╔╝███████║█████╗  ██████╔╝█████╗  ██║   ██║██████╔╝██║  ███╗█████╗
+║  ██║     ██║██╔═══╝ ██╔══██║██╔══╝  ██╔══██╗██╔══╝  ██║   ██║██╔══██╗██║   ██║██╔══╝
+║  ╚██████╗██║██║     ██║  ██║███████╗██║  ██║██║     ╚██████╔╝██║  ██║╚██████╔╝███████╗
+║   ╚═════╝╚═╝╚═╝     ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝      ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝
+║                                                                  ║
+║                  🔒  Secure File Encryption  🔒                  ║
+║                     GitHub: github.com/gtk-gg                    ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
 
-1. 🔒 Encrypt a file
-2. 🔓 Decrypt a file  
-3. 🔐 Encryption Methods Used
-4. 🚪 Exit
+
+1. Encrypt
+2. Decrypt
+3. Methods
+4. Exit
+➤ Select option:
 ```
 
 ## 📖 **Detailed Tutorial**
@@ -90,40 +107,20 @@ DEVELOPER IS NOT RESPONSIBLE FOR YOUR ACTIONS!
 ```
 ➤ Enter password: [hidden]
 ➤ Confirm password: [hidden]
-✅ Password confirmed!
 ```
 
 **Option B: Generate Secure Password**
 ```
-🔐 Generated Password:
-   X7#kL9@mP2$qR5&tY8*wZ3!
-   
-📏 Length: 24 characters
-💪 Contains: Uppercase, lowercase, numbers, symbols
-📋 Status: Auto-copied to clipboard ✓
-
-⚠️ CRITICAL: SAVE THIS PASSWORD NOW!
-   It cannot be recovered if lost!
+Generated Password: 5P%C%rZriTz*fRCf2bqC9M@N
+Use this password? (y/n): [Your Choice in y/n]
 ```
 
 **Step 4: Encryption Process**
 ```
-📄 File: secret_document.pdf
-📦 Size: 15,482,291 bytes
-📂 Location: C:\Users\You\Documents
-⏳ Encrypting...
-
-Starting encryption of: secret_document.pdf
-File size: 15,482,291 bytes
-Encrypting in 65,536 byte chunks...
-Processed: 15,482,291 bytes
-Checksum written: a7f3d8c2...
+Starting encryption of: {path of the file selected for encryption}
 Encryption completed successfully!
-
-✅ Encrypted copy saved as: secret_document.pdf.encrypted
-📊 Encrypted 15,482,291 bytes
-📁 Output: secret_document.pdf.encrypted
-📂 Location: C:\Users\You\Documents
+Encrypted 3,350,785 bytes
+Return to menu? (y/n): [Your Choice in y/n]
 ```
 
 ### **🔓 Decrypting a File**
@@ -141,33 +138,13 @@ Encryption completed successfully!
 ```
 🔓 DECRYPTION PASSWORD
 ═══════════════════════════════════════════════════
-
-Enter the password for your encrypted file
-────────────────────────────────────────
 ➤ Password: [hidden]
 ```
 
 **Step 4: Decryption Process**
 ```
-📄 File: secret_document.pdf.encrypted
-📦 Size: 15,482,387 bytes
-📂 Location: C:\Users\You\Documents
-⏳ Decrypting...
-
-Starting decryption of: secret_document.pdf.encrypted
-Original file size: 15,482,291 bytes
-Encrypted data size: 15,482,291 bytes
-Decrypted: 15,482,291 bytes
-Stored checksum: a7f3d8c2...
-Calculated checksum: a7f3d8c2...
-Decryption completed successfully!
-
-✅ DECRYPTION SUCCESSFUL!
-📊 Decrypted 15,482,291 bytes
-📁 Output: secret_document.pdf
-📂 Location: C:\Users\You\Documents
-📏 Restored size: 15,482,291 bytes
-✓ File restored successfully
+Decrypted 3,350,785 bytes
+Return to menu? (y/n): [Your Choice in y/n]
 ```
 
 ## 🔐 **Encryption Methods**
@@ -176,46 +153,20 @@ Choose option `3` from main menu to see:
 
 ```
 🔐 ENCRYPTION METHODS USED
-═══════════════════════════════════════════════════
+══════════════════════════════════════════════════════════════════════
 
-CipherForge uses secure encryption methods:
-
-1. KEY DERIVATION:
-   • PBKDF2 with SHA-256
-   • 100,000 iterations for brute force resistance
-   • Unique 256-bit salt per file
-
-2. ENCRYPTION ALGORITHM:
-   • XOR-based stream cipher
-   • 256-bit encryption keys
-   • Chunk-by-chunk processing
-
-3. INTEGRITY PROTECTION:
-   • SHA-256 checksums
-   • File size verification
-   • Password verification
-
-4. SECURITY FEATURES:
-   • No password storage in files
-   • No backdoors or recovery methods
-   • Memory-safe operations
-
-⚠️ IMPORTANT:
+1. KEY DERIVATION: PBKDF2 with SHA-256, 100,000 iterations, unique salt
+2. ENCRYPTION: XOR-based stream cipher, chunk-by-chunk, 256-bit key
+3. INTEGRITY: SHA-256 checksum, file size verification
+4. SECURITY: No password storage, memory-safe, no recovery possible
+5. ⚠️ IMPORTANT:
    • Without correct password, decryption is mathematically impossible
    • Each file has unique encryption parameters
    • Lost password = permanently encrypted data
+➤ Press Enter to return...
 ```
 
 ## 🛠️ **Technical Details**
-
-### **File Format**
-```
-[3 bytes]  Magic: "CF!"
-[32 bytes] Salt
-[8 bytes]  Original file size
-[...]      Encrypted data
-[32 bytes] SHA-256 checksum
-```
 
 ### **Supported File Types**
 - **Documents**: PDF, DOCX, XLSX, PPTX, TXT
@@ -252,44 +203,10 @@ CipherForge uses secure encryption methods:
 
 | Issue | Solution |
 |-------|----------|
-| "File not found" error | Use full paths or drag & drop |
-| Permission errors | Run as administrator (Windows) or use sudo (Linux/macOS) |
+| File not found errors | Use full paths or drag & drop |
+| Any Permission errors | Run as administrator (Windows) or use sudo (Linux/macOS) |
 | Decryption fails | Check password accuracy, ensure file wasn't modified |
-| Large file slow processing | Normal - uses chunk-based encryption |
-| Clipboard not working | Install pyperclip: `pip install pyperclip` |
-
-### **Error Messages**
-- **"ERROR: Wrong password or file corrupted"** → Check password, ensure file wasn't modified
-- **"Not a CipherForge encrypted file"** → File wasn't encrypted with this tool
-- **"File header corrupted"** → File was modified or damaged
-- **"Size mismatch"** → Encryption/decryption process interrupted
-
-## 🔧 **Advanced Usage**
-
-### **Command Line Arguments (Future Feature)**
-```bash
-# Encrypt file
-python cipherforge.py -e input.pdf -p "MyPassword123!"
-
-# Decrypt file  
-python cipherforge.py -d input.pdf.encrypted -p "MyPassword123!"
-
-# Batch encrypt folder
-python cipherforge.py -e folder/ -p "MyPassword123!"
-```
-
-### **Custom Configuration**
-Edit these constants in the script:
-```python
-# Change chunk size for performance
-self.chunk_size = 65536  # 64KB chunks
-
-# Change key derivation iterations
-iterations = 100000  # PBKDF2 iterations
-
-# Change output extension
-output_file = file_path + '.encrypted'  # Default extension
-```
+| Large file slow processing | It's Normal |
 
 ## 🤝 **Contributing**
 
@@ -347,29 +264,5 @@ By using this software, you agree that:
 *Protecting your privacy, one file at a time* 🔐
 
 ---
-
-## 🎯 **Quick Reference Card**
-
-```
-ENCRYPTION:
-1. Run cipherforge.py
-2. Choose [1] Encrypt
-3. Select file
-4. Choose password option
-5. File saved as [filename].encrypted
-
-DECRYPTION:
-1. Run cipherforge.py  
-2. Choose [2] Decrypt
-3. Select .encrypted file
-4. Enter password
-5. File restored to original
-
-TIPS:
-• Drag & drop files for easy selection
-• Save generated passwords immediately
-• Test with small files first
-• Keep backups of important files
-```
 
 **Enjoy secure file encryption!** 🚀
