@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const statusSection = document.getElementById('statusSection');
     const statusText = document.getElementById('statusText');
 
-    const cryptoEngine = new CipherForgeCrypto();
+    const cryptoEngine = new CipherForgeCrypto(); // Make sure crypto.js has this class
 
     encryptBtn.addEventListener('click', async () => {
         const selectedFile = window.getSelectedFile();
