@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // Overlay accept
     const overlay = document.getElementById('overlay');
     const acceptBtn = document.getElementById('acceptBtn');
     const appDiv = document.getElementById('app');
@@ -19,11 +20,13 @@ document.addEventListener("DOMContentLoaded", () => {
     let selectedFileObj = null;
     let userPassword = null;
 
+    // ACCEPT button
     acceptBtn.addEventListener('click', () => {
         overlay.classList.add('hidden');
         appDiv.classList.remove('hidden');
     });
 
+    // File handling
     function handleFile(file){
         selectedFileObj = file;
         selectedFileText.textContent = file.name;
@@ -32,12 +35,18 @@ document.addEventListener("DOMContentLoaded", () => {
         decryptBtn.disabled = true;
     }
 
+    // Click or drag/drop
     fileDrop.addEventListener('click', () => fileInput.click());
     fileDrop.addEventListener('dragover', e => { e.preventDefault(); fileDrop.classList.add('hover'); });
     fileDrop.addEventListener('dragleave', () => fileDrop.classList.remove('hover'));
-    fileDrop.addEventListener('drop', e => { e.preventDefault(); fileDrop.classList.remove('hover'); if(e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]); });
+    fileDrop.addEventListener('drop', e => {
+        e.preventDefault(); 
+        fileDrop.classList.remove('hover'); 
+        if(e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+    });
     fileInput.addEventListener('change', e => { if(e.target.files.length) handleFile(e.target.files[0]); });
 
+    // Own password
     ownPasswordBtn.addEventListener('click', () => {
         let pwd = prompt("Enter your password (min 8 chars):");
         if(!pwd) return;
@@ -50,6 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
         decryptBtn.disabled = false;
     });
 
+    // Generate password
     genPasswordBtn.addEventListener('click', () => {
         userPassword = window.cryptoEngine.generatePassword(100);
         genPassword.value = userPassword;
@@ -57,8 +67,14 @@ document.addEventListener("DOMContentLoaded", () => {
         decryptBtn.disabled = false;
     });
 
-    copyPassword.addEventListener('click', () => { if(!genPassword.value) return; navigator.clipboard.writeText(genPassword.value); alert("Copied!"); });
+    // Copy password
+    copyPassword.addEventListener('click', () => {
+        if(!genPassword.value) return;
+        navigator.clipboard.writeText(genPassword.value);
+        alert("Password copied to clipboard!");
+    });
 
+    // Expose file & password
     window.getSelectedFile = () => selectedFileObj;
     window.getUserPassword = () => userPassword;
 });
