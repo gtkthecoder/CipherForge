@@ -19,13 +19,11 @@ document.addEventListener("DOMContentLoaded", () => {
     let selectedFileObj = null;
     let userPassword = null;
 
-    // ACCEPT overlay
     acceptBtn.addEventListener('click', () => {
         overlay.classList.add('hidden');
         appDiv.classList.remove('hidden');
     });
 
-    // File selection helper
     function handleFile(file){
         selectedFileObj = file;
         selectedFileText.textContent = file.name;
@@ -34,40 +32,24 @@ document.addEventListener("DOMContentLoaded", () => {
         decryptBtn.disabled = true;
     }
 
-    // Click or drag/drop events
     fileDrop.addEventListener('click', () => fileInput.click());
-
-    fileDrop.addEventListener('dragover', e => {
-        e.preventDefault();
-        fileDrop.classList.add('hover');
-    });
-
+    fileDrop.addEventListener('dragover', e => { e.preventDefault(); fileDrop.classList.add('hover'); });
     fileDrop.addEventListener('dragleave', () => fileDrop.classList.remove('hover'));
+    fileDrop.addEventListener('drop', e => { e.preventDefault(); fileDrop.classList.remove('hover'); if(e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]); });
+    fileInput.addEventListener('change', e => { if(e.target.files.length) handleFile(e.target.files[0]); });
 
-    fileDrop.addEventListener('drop', e => {
-        e.preventDefault();
-        fileDrop.classList.remove('hover');
-        if(e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
-    });
-
-    fileInput.addEventListener('change', e => {
-        if(e.target.files.length) handleFile(e.target.files[0]);
-    });
-
-    // Password option: own password
-    ownPasswordBtn.addEventListener('click', async () => {
+    ownPasswordBtn.addEventListener('click', () => {
         let pwd = prompt("Enter your password (min 8 chars):");
         if(!pwd) return;
         if(pwd.length < 8 && !confirm("Password too short, use anyway?")) return;
         let confirmPwd = prompt("Confirm password:");
-        if(pwd !== confirmPwd) { alert("Passwords do not match!"); return; }
+        if(pwd !== confirmPwd){ alert("Passwords do not match!"); return; }
         userPassword = pwd;
         genPassword.value = userPassword;
         encryptBtn.disabled = false;
         decryptBtn.disabled = false;
     });
 
-    // Password option: generate
     genPasswordBtn.addEventListener('click', () => {
         userPassword = window.cryptoEngine.generatePassword(100);
         genPassword.value = userPassword;
@@ -75,14 +57,8 @@ document.addEventListener("DOMContentLoaded", () => {
         decryptBtn.disabled = false;
     });
 
-    // Copy password
-    copyPassword.addEventListener('click', () => {
-        if(!genPassword.value) return;
-        navigator.clipboard.writeText(genPassword.value);
-        alert("Copied to clipboard!");
-    });
+    copyPassword.addEventListener('click', () => { if(!genPassword.value) return; navigator.clipboard.writeText(genPassword.value); alert("Copied!"); });
 
-    // Expose selected file & password to app.js
     window.getSelectedFile = () => selectedFileObj;
     window.getUserPassword = () => userPassword;
 });
