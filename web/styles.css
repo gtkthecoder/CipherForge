@@ -32,9 +32,7 @@ body {
     box-shadow: 0 0 15px #0ff;
 }
 
-#overlay button:hover {
-    box-shadow: 0 0 25px #0ff;
-}
+#overlay button:hover { box-shadow: 0 0 25px #0ff; }
 
 .neon-title {
     font-size: 2.5rem;
@@ -73,9 +71,7 @@ button {
     transition: 0.3s;
 }
 
-button:hover {
-    box-shadow: 0 0 25px #0ff;
-}
+button:hover { box-shadow: 0 0 25px #0ff; }
 
 input[type=text] {
     background: #111;
