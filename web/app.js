@@ -21,7 +21,9 @@ document.addEventListener("DOMContentLoaded", () => {
             a.download = file.name + ".encrypted";
             a.click();
             statusText.textContent = `Encryption complete: ${file.name}.encrypted`;
-        } catch(e){ statusText.textContent = `Error: ${e.message}`; }
+        } catch(e){
+            statusText.textContent = `Error: ${e.message}`;
+        }
     });
 
     decryptBtn.addEventListener('click', async () => {
@@ -41,8 +43,12 @@ document.addEventListener("DOMContentLoaded", () => {
             a.download = originalName;
             a.click();
             statusText.textContent = `Decryption complete: ${originalName}`;
-        } catch(e){ statusText.textContent = `Error: ${e.message}`; }
+        } catch(e){
+            statusText.textContent = `Error: ${e.message}`;
+        }
     });
 
-    backToMenu.addEventListener('click', () => { statusSection.classList.add('hidden'); });
+    backToMenu.addEventListener('click', () => {
+        statusSection.classList.add('hidden');
+    });
 });
