@@ -6,42 +6,42 @@ document.addEventListener("DOMContentLoaded", () => {
     const statusSection = document.getElementById('statusSection');
     const statusText = document.getElementById('statusText');
 
-    const cryptoEngine = new CipherForgeCrypto(); // Make sure crypto.js has this class
+    const cryptoEngine = new CipherForgeCrypto();
 
     encryptBtn.addEventListener('click', async () => {
         const selectedFile = window.getSelectedFile();
-        if (!selectedFile) { alert("Select a file first!"); return; }
+        if(!selectedFile){ alert("Select a file first!"); return; }
 
-        const pwd = cryptoEngine.generatePassword();
+        const pwd = cryptoEngine.generatePassword(100); // ~100-char password
         genPassword.value = pwd;
         passwordSection.classList.remove('hidden');
 
         try {
             const encBlob = await cryptoEngine.encryptFile(selectedFile, pwd);
-            let safeName = selectedFile.name.replace(/\s+/g, "_").replace(/\(|\)/g, "");
+            let safeName = selectedFile.name.replace(/\s+/g,"_").replace(/\(|\)/g,"");
             downloadBlob(encBlob, safeName + ".encrypted");
-            statusText.textContent = "Encryption completed successfully!";
+            statusText.textContent = "Encryption done!";
             statusSection.classList.remove('hidden');
-        } catch (e) {
-            alert("Encryption failed: " + e.message);
+        } catch(e){
+            alert("Encryption failed: "+e.message);
         }
     });
 
     decryptBtn.addEventListener('click', async () => {
         const selectedFile = window.getSelectedFile();
-        if (!selectedFile) { alert("Select a file first!"); return; }
+        if(!selectedFile){ alert("Select a file first!"); return; }
 
         const pwd = prompt("Enter password for decryption:");
-        if (!pwd) return;
+        if(!pwd) return;
 
         try {
             const decBlob = await cryptoEngine.decryptFile(selectedFile, pwd);
-            let originalName = selectedFile.name.replace(/\.encrypted$/, "");
+            let originalName = selectedFile.name.replace(/\.encrypted$/,"");
             downloadBlob(decBlob, originalName);
-            statusText.textContent = "Decryption completed successfully!";
+            statusText.textContent = "Decryption done!";
             statusSection.classList.remove('hidden');
-        } catch (e) {
-            alert("Decryption failed. Wrong password or corrupted file.");
+        } catch(e){
+            alert("Decryption failed: Wrong password or corrupted file.");
         }
     });
 
