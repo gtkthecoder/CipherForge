@@ -1,5 +1,3 @@
-// crypto.js - AES-256-GCM implementation
-
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 
@@ -79,3 +77,4 @@ export async function decryptData(file, password) {
     throw new Error("Wrong password or corrupted file");
   }
 }
+
