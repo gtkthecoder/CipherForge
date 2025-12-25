@@ -16,6 +16,7 @@ try:
     from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
     from cryptography.hazmat.backends import default_backend
     from cryptography.exceptions import InvalidTag
+    from cryptography.hazmat.primitives.ciphers.aead import AESGCM
     CRYPTO_AVAILABLE = True
 except ImportError:
     CRYPTO_AVAILABLE = False
@@ -59,24 +60,27 @@ def show_banner():
 """)
 
 # ============================================
-# ENCRYPTION ENGINE
+# ENCRYPTION ENGINE (AES-GCM + PBKDF2)
 # ============================================
 class ReliableEncryptionEngine:
     def __init__(self):
         self.chunk_size = 65536  # 64KB chunks
 
     def derive_key(self, password: str, salt: bytes) -> bytes:
+        # PBKDF2 + SHA256, 100000 iterations, 32 bytes key
         return hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000, 32)
 
     def encrypt_chunk(self, data: bytes, key: bytes) -> bytes:
-        result = bytearray(data)
-        key_len = len(key)
-        for i in range(len(result)):
-            result[i] ^= key[i % key_len]
-        return bytes(result)
+        nonce = secrets.token_bytes(12)  # AESGCM nonce
+        aesgcm = AESGCM(key)
+        ciphertext = aesgcm.encrypt(nonce, data, None)
+        return nonce + ciphertext  # prepend nonce
 
     def decrypt_chunk(self, data: bytes, key: bytes) -> bytes:
-        return self.encrypt_chunk(data, key)
+        nonce = data[:12]
+        ciphertext = data[12:]
+        aesgcm = AESGCM(key)
+        return aesgcm.decrypt(nonce, ciphertext, None)
 
 class FileEncryptor:
     def __init__(self):
@@ -88,19 +92,18 @@ class FileEncryptor:
             salt = secrets.token_bytes(32)
             key = self.engine.derive_key(password, salt)
             file_size = os.path.getsize(input_file)
+            checksum = hashlib.sha256()
             with open(input_file, 'rb') as f_in, open(output_file, 'wb') as f_out:
-                f_out.write(b'CF!')  # Magic
+                f_out.write(b'CF!AES')  # Magic header
                 f_out.write(salt)
                 f_out.write(struct.pack('Q', file_size))
-                checksum = hashlib.sha256()
-                bytes_processed = 0
                 while True:
                     chunk = f_in.read(self.engine.chunk_size)
                     if not chunk: break
                     encrypted_chunk = self.engine.encrypt_chunk(chunk, key)
                     checksum.update(encrypted_chunk)
+                    f_out.write(struct.pack('I', len(encrypted_chunk)))  # store chunk length
                     f_out.write(encrypted_chunk)
-                    bytes_processed += len(chunk)
                 f_out.write(checksum.digest())
             print(f"Encryption completed successfully!")
             return True, f"Encrypted {file_size:,} bytes"
@@ -110,29 +113,24 @@ class FileEncryptor:
     def decrypt_file(self, input_file: str, output_file: str, password: str) -> Tuple[bool, str]:
         try:
             with open(input_file, 'rb') as f_in:
-                if f_in.read(3) != b'CF!':
-                    return False, "Not a CipherForge encrypted file"
+                if f_in.read(6) != b'CF!AES':
+                    return False, "Not a CipherForge AES encrypted file"
                 salt = f_in.read(32)
                 size_data = f_in.read(8)
                 if len(salt) != 32 or len(size_data) != 8:
                     return False, "File header corrupted"
                 original_size = struct.unpack('Q', size_data)[0]
-                key = ReliableEncryptionEngine().derive_key(password, salt)
-                current_pos = f_in.tell()
-                f_in.seek(0, 2)
-                total_size = f_in.tell()
-                f_in.seek(current_pos)
-                data_size = total_size - 43 - 32
-                checksum = hashlib.sha256()
+                key = self.engine.derive_key(password, salt)
                 bytes_written = 0
+                checksum = hashlib.sha256()
                 with open(output_file, 'wb') as f_out:
-                    while bytes_written < data_size:
-                        remaining = data_size - bytes_written
-                        read_size = min(ReliableEncryptionEngine().chunk_size, remaining)
-                        encrypted_chunk = f_in.read(read_size)
-                        if not encrypted_chunk: break
+                    while bytes_written < original_size:
+                        len_bytes = f_in.read(4)
+                        if not len_bytes: break
+                        chunk_len = struct.unpack('I', len_bytes)[0]
+                        encrypted_chunk = f_in.read(chunk_len)
                         checksum.update(encrypted_chunk)
-                        decrypted_chunk = ReliableEncryptionEngine().decrypt_chunk(encrypted_chunk, key)
+                        decrypted_chunk = self.engine.decrypt_chunk(encrypted_chunk, key)
                         f_out.write(decrypted_chunk)
                         bytes_written += len(decrypted_chunk)
                     stored_checksum = f_in.read(32)
@@ -231,7 +229,7 @@ def show_encryption_methods():
     print("\n" + "═"*70 + "\n🔐 ENCRYPTION METHODS USED\n" + "═"*70)
     print("""
 1. KEY DERIVATION: PBKDF2 with SHA-256, 100,000 iterations, unique salt
-2. ENCRYPTION: XOR-based stream cipher, chunk-by-chunk, 256-bit key
+2. ENCRYPTION: AES-GCM chunk-by-chunk, 256-bit key
 3. INTEGRITY: SHA-256 checksum, file size verification
 4. SECURITY: No password storage, memory-safe, no recovery possible
 5. ⚠️ IMPORTANT:
