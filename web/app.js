@@ -1,14 +1,14 @@
 let selectedFile, action;
 
 const show = id => {
-  document.querySelectorAll(".screen").forEach(s => s.classList.add("hidden"));
+  document.querySelectorAll(".screen").forEach(s =>
+    s.classList.add("hidden")
+  );
   document.getElementById(id).classList.remove("hidden");
 };
 
-// ACCEPT BUTTON
 document.getElementById("acceptBtn").onclick = () => show("screen-file");
 
-// FILE SELECTION
 const dropZone = document.getElementById("dropZone");
 const fileInput = document.getElementById("fileInput");
 
@@ -26,74 +26,70 @@ fileInput.onchange = () => {
   show("screen-action");
 };
 
-// ENCRYPT BUTTON
 document.getElementById("encryptBtn").onclick = () => {
   action = "encrypt";
   show("screen-password");
-
-  const autoLabel = document.getElementById("autoPassword").closest("label");
-  const genBox = document.getElementById("generatedBox");
-
-  if (autoLabel) autoLabel.style.display = "flex";
-  if (genBox) genBox.style.display = "none";
 };
 
-// DECRYPT BUTTON
 document.getElementById("decryptBtn").onclick = () => {
   action = "decrypt";
   show("screen-password");
 
-  const autoLabel = document.getElementById("autoPassword").closest("label");
+  const auto = document.getElementById("autoPassword");
   const genBox = document.getElementById("generatedBox");
-
-  if (autoLabel) autoLabel.style.display = "none";
-  if (genBox) genBox.style.display = "none";
+  if (auto) auto.checked = false;
+  if (genBox) genBox.classList.add("hidden");
 };
 
-// PROCEED BUTTON
 document.getElementById("proceedBtn").onclick = async () => {
   const pwd = document.getElementById("passwordInput").value;
   if (!pwd) return alert("Password required");
 
   show("screen-status");
   const status = document.getElementById("statusText");
-  status.textContent = action === "encrypt" ? "Encrypting..." : "Decrypting...";
+  status.textContent =
+    action === "encrypt" ? "Encrypting..." : "Decrypting...";
 
   try {
-    let result;
+    let blob;
 
     if (action === "encrypt") {
-      result = await encryptData(await selectedFile.arrayBuffer(), pwd);
+      blob = await encryptData(
+        await selectedFile.arrayBuffer(),
+        pwd
+      );
     } else {
-      const data = await decryptData(selectedFile, pwd);
-      result = new Blob([data]);
+      const decrypted = await decryptData(selectedFile, pwd);
+      blob = new Blob([decrypted], {
+        type: "application/octet-stream"
+      });
     }
 
     const a = document.createElement("a");
-    const url = URL.createObjectURL(result);
+    const url = URL.createObjectURL(blob);
 
-    let downloadName;
+    let name;
     if (action === "encrypt") {
-      downloadName = selectedFile.name + ".encrypted";
+      name = selectedFile.name + ".encrypted";
     } else {
-      // remove ".encrypted" and keep original extension
-      downloadName = selectedFile.name.endsWith(".encrypted")
-        ? selectedFile.name.replace(/\.encrypted$/, "")
+      name = selectedFile.name.endsWith(".encrypted")
+        ? selectedFile.name.slice(0, -10)
         : selectedFile.name;
     }
 
     a.href = url;
-    a.download = downloadName;
+    a.download = name;
     document.body.appendChild(a);
     a.click();
+
     URL.revokeObjectURL(url);
     a.remove();
 
-    status.textContent = "✅ Completed";
-  } catch {
+    status.textContent = "✔ Completed";
+  } catch (err) {
+    console.error(err);
     status.textContent = "❌ Wrong password or corrupted file";
   }
 };
 
-// BACK BUTTON
 document.getElementById("backBtn").onclick = () => location.reload();
