@@ -1,9 +1,24 @@
+// crypto.js - AES-256-GCM implementation
+
+const encoder = new TextEncoder();
+const decoder = new TextDecoder();
+
+// Generate a cryptographically strong random salt
+function generateSalt() {
+  return crypto.getRandomValues(new Uint8Array(16));
+}
+
+// Generate a cryptographically strong random IV (12 bytes for GCM)
+function generateIV() {
+  return crypto.getRandomValues(new Uint8Array(12));
+}
+
+// Derive AES key from password using PBKDF2 + SHA-256
 async function deriveKey(password, salt) {
-  const enc = new TextEncoder();
-  const baseKey = await crypto.subtle.importKey(
+  const keyMaterial = await crypto.subtle.importKey(
     "raw",
-    enc.encode(password),
-    "PBKDF2",
+    encoder.encode(password),
+    { name: "PBKDF2" },
     false,
     ["deriveKey"]
   );
@@ -11,43 +26,56 @@ async function deriveKey(password, salt) {
   return crypto.subtle.deriveKey(
     {
       name: "PBKDF2",
-      salt,
+      salt: salt,
       iterations: 100000,
       hash: "SHA-256"
     },
-    baseKey,
+    keyMaterial,
     { name: "AES-GCM", length: 256 },
     false,
     ["encrypt", "decrypt"]
   );
 }
 
-async function encryptData(buffer, password) {
-  const salt = crypto.getRandomValues(new Uint8Array(16));
-  const iv = crypto.getRandomValues(new Uint8Array(12));
+// Encrypt ArrayBuffer data
+export async function encryptData(buffer, password) {
+  const salt = generateSalt();
+  const iv = generateIV();
   const key = await deriveKey(password, salt);
 
   const encrypted = await crypto.subtle.encrypt(
-    { name: "AES-GCM", iv },
+    { name: "AES-GCM", iv: iv },
     key,
     buffer
   );
 
-  return new Blob([salt, iv, new Uint8Array(encrypted)]);
+  // Output format: [salt][iv][ciphertext]
+  const result = new Uint8Array(salt.byteLength + iv.byteLength + encrypted.byteLength);
+  result.set(salt, 0);
+  result.set(iv, salt.byteLength);
+  result.set(new Uint8Array(encrypted), salt.byteLength + iv.byteLength);
+  return result;
 }
 
-async function decryptData(blob, password) {
-  const raw = new Uint8Array(await blob.arrayBuffer());
+// Decrypt ArrayBuffer or File
+export async function decryptData(file, password) {
+  const arrayBuffer = await file.arrayBuffer();
+  const data = new Uint8Array(arrayBuffer);
 
-  const salt = raw.slice(0, 16);
-  const iv = raw.slice(16, 28);
-  const data = raw.slice(28);
+  const salt = data.slice(0, 16);
+  const iv = data.slice(16, 28);
+  const ciphertext = data.slice(28);
 
   const key = await deriveKey(password, salt);
 
-  return crypto.subtle.decrypt(
-    { name: "AES-GCM", iv },
-    key,
-    data
-  );
+  try {
+    const decrypted = await crypto.subtle.decrypt(
+      { name: "AES-GCM", iv: iv },
+      key,
+      ciphertext
+    );
+    return new Uint8Array(decrypted);
+  } catch {
+    throw new Error("Wrong password or corrupted file");
+  }
 }
