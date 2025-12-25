@@ -11,32 +11,21 @@ const genBox = document.getElementById("generatedBox");
 const genField = document.getElementById("generatedPassword");
 const pwdInput = document.getElementById("passwordInput");
 const copyBtn = document.getElementById("copyBtn");
-const autoCheckbox = document.getElementById("autoPassword");
 
-autoCheckbox.onchange = e => {
+document.getElementById("autoPassword").onchange = e => {
   if (e.target.checked) {
-    // Generate password and show only generated box
     const pwd = generatePassword();
     genField.value = pwd;
-
-    // Hide the text input to prevent accidental edits
-    pwdInput.style.display = "none";
-
-    // Show generated password box
+    pwdInput.value = pwd;
     genBox.style.display = "flex";
   } else {
-    // Hide generated password box
     genBox.style.display = "none";
-
-    // Show the text input for user to enter own password
-    pwdInput.value = "";
-    pwdInput.style.display = "block";
   }
 };
 
-// Copy button remains functional
 copyBtn.onclick = () => {
   navigator.clipboard.writeText(genField.value);
   copyBtn.textContent = "Copied ✓";
   setTimeout(() => (copyBtn.textContent = "Copy"), 1200);
 };
+
