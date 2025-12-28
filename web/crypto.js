@@ -3,7 +3,7 @@ const encoder = new TextEncoder();
 /* ===============================
    KEY DERIVATION (PBKDF2)
 ================================ */
-async function getKey(password, salt) {
+async function deriveKey(password, salt) {
   const baseKey = await crypto.subtle.importKey(
     "raw",
     encoder.encode(password),
@@ -15,7 +15,7 @@ async function getKey(password, salt) {
   return crypto.subtle.deriveKey(
     {
       name: "PBKDF2",
-      salt,
+      salt: salt,
       iterations: 100000,
       hash: "SHA-256"
     },
@@ -31,31 +31,29 @@ async function getKey(password, salt) {
 
 /* ===============================
    ENCRYPT (AES-256-GCM)
-   Binary-safe for ALL file types
 ================================ */
 async function encryptData(buffer, password) {
   const salt = crypto.getRandomValues(new Uint8Array(16));
-  const iv = crypto.getRandomValues(new Uint8Array(12));
-  const key = await getKey(password, salt);
+  const iv   = crypto.getRandomValues(new Uint8Array(12));
+  const key  = await deriveKey(password, salt);
 
-  const encrypted = await crypto.subtle.encrypt(
+  const ciphertext = await crypto.subtle.encrypt(
     { name: "AES-GCM", iv },
     key,
     buffer
   );
 
-  // Layout:
-  // [16 salt][12 iv][ciphertext + auth tag]
-  const output = new Uint8Array(
-    16 + 12 + encrypted.byteLength
+  // FORMAT:
+  // [16 bytes salt][12 bytes iv][ciphertext+tag]
+  const out = new Uint8Array(
+    16 + 12 + ciphertext.byteLength
   );
 
-  let offset = 0;
-  output.set(salt, offset); offset += 16;
-  output.set(iv, offset); offset += 12;
-  output.set(new Uint8Array(encrypted), offset);
+  out.set(salt, 0);
+  out.set(iv, 16);
+  out.set(new Uint8Array(ciphertext), 28);
 
-  return output.buffer;
+  return out.buffer;
 }
 
 /* ===============================
@@ -64,18 +62,17 @@ async function encryptData(buffer, password) {
 async function decryptData(file, password) {
   const data = new Uint8Array(await file.arrayBuffer());
 
-  let offset = 0;
-  const salt = data.slice(offset, offset + 16); offset += 16;
-  const iv = data.slice(offset, offset + 12); offset += 12;
-  const encrypted = data.slice(offset);
+  const salt = data.slice(0, 16);
+  const iv   = data.slice(16, 28);
+  const enc  = data.slice(28);
 
-  const key = await getKey(password, salt);
+  const key = await deriveKey(password, salt);
 
-  const decrypted = await crypto.subtle.decrypt(
+  const plaintext = await crypto.subtle.decrypt(
     { name: "AES-GCM", iv },
     key,
-    encrypted
+    enc
   );
 
-  return decrypted; // ArrayBuffer
+  return plaintext; // ArrayBuffer
 }
